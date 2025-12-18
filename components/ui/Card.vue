@@ -1,0 +1,38 @@
+<template>
+  <div :class="cardClasses">
+    <div v-if="$slots.header" class="border-b border-neutral-200 pb-4 mb-4">
+      <slot name="header" />
+    </div>
+    <slot />
+    <div v-if="$slots.footer" class="border-t border-neutral-200 pt-4 mt-4">
+      <slot name="footer" />
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+interface Props {
+  padding?: 'none' | 'sm' | 'md' | 'lg'
+  hover?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  padding: 'md',
+  hover: false
+})
+
+const cardClasses = computed(() => {
+  const base = 'bg-white rounded-xl shadow-sm border border-neutral-200'
+
+  const paddings = {
+    none: '',
+    sm: 'p-4',
+    md: 'p-6',
+    lg: 'p-8'
+  }
+
+  const hoverEffect = props.hover ? 'transition-shadow hover:shadow-md' : ''
+
+  return [base, paddings[props.padding], hoverEffect].join(' ')
+})
+</script>
