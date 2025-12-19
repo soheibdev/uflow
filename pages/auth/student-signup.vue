@@ -1,9 +1,9 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-blue-50 to-white flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-    <UiCard class="w-full max-w-md">
+  <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <UiCard class="w-full max-w-md animate-scale-in">
       <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold text-neutral-900 mb-2">Student Sign Up</h1>
-        <p class="text-neutral-600">Create your uflow account</p>
+        <h1 class="text-4xl font-bold text-neutral-900 mb-3">Student Sign Up</h1>
+        <p class="text-neutral-600 text-lg">Create your uflow account</p>
       </div>
 
       <form @submit.prevent="handleSignUp" class="space-y-4">

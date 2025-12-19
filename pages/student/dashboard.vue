@@ -1,24 +1,24 @@
 <template>
   <NuxtLayout name="student">
-    <div class="space-y-8">
-      <div>
-        <h1 class="text-3xl font-bold text-neutral-900 mb-2">Good day{{ studentProfile?.first_name ? ', ' + studentProfile.first_name : '' }}!</h1>
-        <p class="text-neutral-600">Here's your personalized plan for today</p>
+    <div class="space-y-10">
+      <div class="animate-fade-in-up">
+        <h1 class="text-4xl font-bold text-neutral-900 mb-3">Good day{{ studentProfile?.first_name ? ', ' + studentProfile.first_name : '' }}!</h1>
+        <p class="text-neutral-600 text-lg">Here's your personalized plan for today</p>
       </div>
 
-      <div v-if="!todayCheckin" class="animate-slide-up">
-        <UiCard>
-          <h2 class="text-xl font-semibold mb-4">How are you feeling today?</h2>
-          <div class="flex gap-4 mb-4 justify-center">
+      <div v-if="!todayCheckin" class="animate-scale-in animate-delay-100">
+        <UiCard padding="lg">
+          <h2 class="text-2xl font-semibold mb-8 text-center text-neutral-900">How are you feeling today?</h2>
+          <div class="flex gap-6 mb-6 justify-center flex-wrap">
             <button
               v-for="mood in moods"
               :key="mood.level"
               type="button"
               :class="[
-                'text-5xl p-4 rounded-xl transition-all',
+                'text-6xl p-6 rounded-2xl transition-all duration-500',
                 selectedMood === mood.level
-                  ? 'bg-blue-100 ring-2 ring-blue-500 scale-110'
-                  : 'hover:bg-neutral-100 hover:scale-105'
+                  ? 'bg-blue-50 ring-2 ring-blue-400 scale-110 shadow-lg'
+                  : 'hover:bg-neutral-50 hover:scale-105 hover:shadow-md'
               ]"
               @click="selectedMood = mood.level"
             >
@@ -28,12 +28,13 @@
           <UiInput
             v-model="checkinNote"
             placeholder="How's your day going? (optional)"
-            class="mb-4"
+            class="mb-6"
           />
           <UiButton
             :disabled="!selectedMood"
             :loading="checkinLoading"
             full-width
+            size="lg"
             @click="submitCheckin"
           >
             Submit Check-In
@@ -41,27 +42,30 @@
         </UiCard>
       </div>
 
-      <div v-if="loadingPlan" class="text-center py-12">
-        <Icon name="svg-spinners:180-ring" class="w-12 h-12 text-blue-600 mx-auto mb-4" />
-        <p class="text-neutral-600">Creating your daily plan...</p>
+      <div v-if="loadingPlan" class="text-center py-16 animate-fade-in-up">
+        <Icon name="svg-spinners:180-ring" class="w-16 h-16 text-blue-600 mx-auto mb-6" />
+        <p class="text-neutral-600 text-lg">Creating your daily plan...</p>
       </div>
 
-      <div v-else-if="dailyPlan && planItems.length > 0" class="space-y-4">
+      <div v-else-if="dailyPlan && planItems.length > 0" class="space-y-6 animate-fade-in-up animate-delay-200">
         <div class="flex items-center justify-between">
-          <h2 class="text-2xl font-bold text-neutral-900">Today's Plan</h2>
+          <h2 class="text-3xl font-bold text-neutral-900">Today's Plan</h2>
           <UiBadge :variant="completedCount === planItems.length ? 'green' : 'blue'">
             {{ completedCount }} / {{ planItems.length }} completed
           </UiBadge>
         </div>
 
-        <div class="space-y-3">
+        <div class="space-y-4">
           <UiCard
-            v-for="item in planItems"
+            v-for="(item, index) in planItems"
             :key="item.id"
+            hover
             padding="md"
             :class="[
-              'transition-all',
-              item.status === 'completed' ? 'opacity-60' : ''
+              'transition-all duration-500',
+              item.status === 'completed' ? 'opacity-60' : '',
+              'animate-scale-in',
+              index === 0 ? 'animate-delay-100' : index === 1 ? 'animate-delay-200' : 'animate-delay-300'
             ]"
           >
             <div class="flex items-start gap-4">
@@ -69,9 +73,9 @@
                 <button
                   type="button"
                   :class="[
-                    'w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all',
+                    'w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all duration-500',
                     item.status === 'completed'
-                      ? 'bg-green-500 border-green-500'
+                      ? 'bg-emerald-500 border-emerald-500'
                       : 'border-neutral-300 hover:border-blue-500'
                   ]"
                   @click="toggleItemStatus(item)"
@@ -82,14 +86,14 @@
               <div class="flex-1">
                 <div class="flex items-start justify-between gap-4">
                   <div>
-                    <h3 class="font-semibold text-neutral-900 mb-1">{{ item.title }}</h3>
-                    <p class="text-sm text-neutral-600 mb-2">{{ item.description }}</p>
+                    <h3 class="font-semibold text-neutral-900 mb-2 text-lg">{{ item.title }}</h3>
+                    <p class="text-neutral-600 mb-3 leading-relaxed">{{ item.description }}</p>
                     <UiBadge size="sm" :variant="getItemTypeBadgeVariant(item.item_type)">
                       {{ item.item_type }}
                     </UiBadge>
                   </div>
                 </div>
-                <p v-if="item.ai_reasoning" class="text-xs text-neutral-500 mt-2 italic">
+                <p v-if="item.ai_reasoning" class="text-sm text-neutral-500 mt-3 italic leading-relaxed">
                   Why: {{ item.ai_reasoning }}
                 </p>
               </div>
@@ -99,9 +103,9 @@
       </div>
 
       <div v-else-if="!loadingPlan && todayCheckin">
-        <UiCard class="text-center py-8">
-          <p class="text-neutral-600 mb-4">No plan yet for today. Let's create one!</p>
-          <UiButton @click="fetchTodayPlan">
+        <UiCard class="text-center py-12 animate-scale-in">
+          <p class="text-neutral-600 mb-6 text-lg">No plan yet for today. Let's create one!</p>
+          <UiButton @click="fetchTodayPlan" size="lg">
             Generate Daily Plan
           </UiButton>
         </UiCard>
