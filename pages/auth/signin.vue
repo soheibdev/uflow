@@ -11,7 +11,7 @@
           v-model="form.email"
           type="email"
           label="Email"
-          placeholder="you@university.edu"
+          placeholder="you@example.com"
           required
           :error="errors.email"
         />

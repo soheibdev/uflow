@@ -28,10 +28,9 @@
         <UiInput
           v-model="form.email"
           type="email"
-          label="University Email"
-          placeholder="you@university.edu"
+          label="Email"
+          placeholder="you@example.com"
           required
-          hint="Use your university email address"
           :error="errors.email"
         />
 

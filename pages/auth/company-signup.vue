@@ -18,10 +18,9 @@
         <UiInput
           v-model="form.email"
           type="email"
-          label="Professional Email"
-          placeholder="contact@company.com"
+          label="Email"
+          placeholder="you@example.com"
           required
-          hint="Use your company email (not gmail, yahoo, etc.)"
           :error="errors.email"
         />
 

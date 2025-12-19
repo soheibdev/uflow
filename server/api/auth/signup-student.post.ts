@@ -11,20 +11,6 @@ export default defineEventHandler(async (event) => {
 
   const supabase = useSupabaseServer()
 
-  const emailDomain = email.split('@')[1]
-  const { data: allowedDomain } = await supabase
-    .from('university_domains')
-    .select('*')
-    .eq('domain', emailDomain)
-    .maybeSingle()
-
-  if (!allowedDomain) {
-    throw createError({
-      statusCode: 400,
-      message: 'Please use a valid university email address'
-    })
-  }
-
   const { data: authData, error: authError } = await supabase.auth.admin.createUser({
     email,
     password,

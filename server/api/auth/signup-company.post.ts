@@ -11,20 +11,6 @@ export default defineEventHandler(async (event) => {
 
   const supabase = useSupabaseServer()
 
-  const emailDomain = email.split('@')[1]
-  const { data: blockedDomain } = await supabase
-    .from('blocked_domains')
-    .select('*')
-    .eq('domain', emailDomain)
-    .maybeSingle()
-
-  if (blockedDomain) {
-    throw createError({
-      statusCode: 400,
-      message: 'Please use a professional email address (not gmail, yahoo, outlook, etc.)'
-    })
-  }
-
   const { data: authData, error: authError } = await supabase.auth.admin.createUser({
     email,
     password,
